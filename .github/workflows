@@ -1,11 +1,12 @@
-name: Bandit Scan
+name: Bandit Security Scan
 
 on:
   pull_request:
     branches:
-      - main  
+      - main
+
 jobs:
-  build:
+  security_scan:
     runs-on: ubuntu-latest
 
     steps:
@@ -17,10 +18,18 @@ jobs:
         with:
           python-version: 3.x
 
-      - name: Install dependencies
+      - name: Install Dependencies
         run: |
-          pip install -r requirements.txt  
+          pip install -r requirements.txt
+          pip install bandit
 
-      - name: Run Bandit
+      - name: Run Bandit Scan
+        id: bandit
         run: |
-          bandit -r .
+          bandit_result=$(bandit -r . --format json || true)
+          echo "::set-output name=bandit_result::$bandit_result"
+
+      - name: Check Bandit Results
+        run: |
+          echo "${{ steps.bandit.outputs.bandit_result }}"
+        
