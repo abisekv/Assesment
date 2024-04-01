@@ -3,8 +3,7 @@ name: Bandit Scan
 on:
   pull_request:
     branches:
-      - main  # Change to your default branch if it's different
-
+      - main  
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -20,7 +19,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install -r requirements.txt  # Adjust this according to your project setup
+          pip install -r requirements.txt  
 
       - name: Run Bandit
         run: |
