@@ -1,1 +1,27 @@
+name: Bandit Scan
 
+on:
+  pull_request:
+    branches:
+      - main  # Change to your default branch if it's different
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.x
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt  # Adjust this according to your project setup
+
+      - name: Run Bandit
+        run: |
+          bandit -r .
