@@ -1,0 +1,47 @@
+
+
+
+import requests
+
+def fetch_code_scanning_alerts(owner, repo, token):
+    headers = {
+        "Authorization": f"token {token}",
+        "Accept": "application/vnd.github.v3+json"
+    }
+    url = f"https://api.github.com/repos/{owner}/{repo}/code-scanning/alerts"
+
+    alerts = []
+
+    # Fetch all pages of alerts
+    while url:
+        response = requests.get(url, headers=headers)
+        if response.status_code != 200:
+            print(f"Failed to fetch alerts: {response.status_code}")
+            return []
+
+        data = response.json()
+        alerts.extend(data.get("alerts", []))
+
+        # Check if there are more pages
+        url = response.links.get("next", {}).get("url")
+
+    return alerts
+
+def filter_alerts_by_severity(alerts, severity):
+    return [alert for alert in alerts if alert["state"] == "open" and alert["rule"]["severity"] in ["high", "critical"]]
+
+# Replace these values with your repository information
+owner = abisekv
+repo = https://github.com/abisekv/Assesment.git
+token = 
+
+
+# Fetch all code scanning alerts
+alerts = fetch_code_scanning_alerts(owner, repo, token)
+
+# Filter alerts by severity High or above
+high_or_above_alerts = filter_alerts_by_severity(alerts, ["high", "critical"])
+
+# Print or process the filtered alerts as needed
+for alert in high_or_above_alerts:
+    print(alert)
